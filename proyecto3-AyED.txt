@@ -1,0 +1,557 @@
+﻿#include <iostream>
+#include <string>
+#include <cstring>
+
+using namespace std;	
+
+
+class Nodo{
+    public:
+        string nombre;
+        string descripcion;
+        int tam;
+        Nodo *derecho;        //HIJO
+        Nodo *izquierdo;    //HERMANO
+    public:
+Nodo(){
+    tam=0;
+derecho=NULL;
+izquierdo=NULL;
+}
+};
+
+class Arbol{
+public:
+Nodo *raiz;
+public:
+    Arbol(){
+ Nodo * pNew = new Nodo();
+        pNew->nombre='@';
+        raiz=pNew;
+    }
+
+Nodo* recursion(Nodo *aux,string dir){
+if(aux==NULL){
+        return NULL;}
+    if(aux->nombre==dir){
+        return aux;}
+    Nodo * temp;
+    Nodo * temp2;
+    temp=recursion(aux->izquierdo,dir);
+    temp2=recursion(aux->derecho,dir);
+    if(temp!=NULL){
+        return temp;}
+    if(temp2!=NULL){
+        return temp2;}
+return NULL;
+
+}//fin de la recursion
+
+
+void imprimir(Nodo * pepa){
+	if(pepa!=NULL){
+		if(pepa->izquierdo!=NULL){imprimir(pepa->izquierdo);}
+		cout<<pepa->nombre<<endl;
+		if(pepa->derecho!=NULL){imprimir(pepa->derecho);}
+	}
+}
+
+void rm(string nombre, Nodo * aux){
+	Nodo * temp= new Nodo();
+
+	if (aux->derecho->nombre==nombre){
+		cout<<"se metio en el primer hijo"<<endl;
+		temp=aux->derecho;
+		
+		if(aux->derecho->izquierdo!=NULL){
+			aux->derecho=aux->derecho->izquierdo;
+		}else{
+		aux->derecho=NULL;}
+		delete temp;
+	}else{
+		cout<<"no se metio en el primer hijo"<<endl;
+		Nodo *tempx=new Nodo();
+		Nodo *auxx=new Nodo();
+		tempx=aux->derecho;
+		temp=aux->derecho;
+		
+		
+		 while(temp->nombre!=nombre){
+                    if (tempx->izquierdo->nombre!=nombre){
+						tempx=tempx->izquierdo;}
+                   
+                    temp=temp->izquierdo;
+                }
+              
+        
+         if(temp->izquierdo!=NULL){
+			 auxx=temp;
+			 tempx->izquierdo=temp->izquierdo;
+			delete auxx;
+		 }else{
+			 auxx=temp;
+			 tempx->izquierdo=NULL;
+			 delete auxx;
+		 }
+                
+                
+              
+	}
+	
+}
+
+
+void insertarNodo(string n, Nodo *aux){
+    cout<<"entro en el insetarnodo"<<endl;
+    Nodo * temp = new Nodo;
+temp->nombre = n;
+    if(aux->derecho == NULL){
+    aux->derecho = temp;
+    cout<<"inserto el segundo sin hijos"<<endl;
+    }else{
+		 cout<<"entro por aqui"<<endl;
+                Nodo * temp2= new Nodo();
+                temp2->nombre=n;
+                Nodo * tempx= new Nodo();
+                tempx=aux->derecho;
+                while(tempx->izquierdo!=NULL){
+                    tempx=tempx->izquierdo;
+                }
+                tempx->izquierdo=temp2;
+		
+		
+    }
+}
+
+
+void genkidama(Nodo * perico){
+	cout<<"entro con el nodo '"<<perico->nombre<<"'"<<endl;
+	if(raiz!=perico){
+		if(eshoja(perico)){
+			cout<<"entro a q '"<<perico->nombre<<"' es hoja"<<endl;
+			delete perico;
+		}else{
+			if(NULL==perico->izquierdo){
+				cout<<"entro a q '"<<perico->nombre<<"' no tiene hermanos"<<endl;
+				genkidama(perico->derecho);
+				delete perico;
+				perico->derecho=NULL;
+			}
+			if(NULL==perico->derecho){
+				cout<<"entro a q '"<<perico->nombre<<"' no tiene hijos"<<endl;
+				genkidama(perico->izquierdo);
+				delete perico;
+				perico->izquierdo=NULL;
+			}
+			if(!eshoja(perico)){
+				cout<<"entro a q '"<<perico->nombre<<"' no es hoja"<<endl;
+				genkidama(perico->izquierdo);
+				genkidama(perico->derecho);
+				delete perico;
+				perico->izquierdo=perico->derecho=NULL;
+			}
+		}
+	}else{
+		genkidama(raiz->derecho);
+		raiz->derecho=NULL;
+		cout<<"Se eliminó la raíz"<<endl;
+	}
+}
+
+
+void HDi (Nodo * Papel, string causa){
+	Nodo * nuevo = new Nodo();
+	nuevo->nombre=causa;
+	Papel->derecho=nuevo;
+}
+
+void UHe (Nodo * Vespa, string convive){
+	Nodo * nuevo =  new Nodo();
+	nuevo->nombre=convive;
+	Vespa->izquierdo=nuevo;
+}
+
+bool eshoja(Nodo * pana){
+	return pana->izquierdo==NULL && pana->derecho==NULL;
+}
+
+void locate(Nodo *canton,string busc){
+//ese string q recibe es el q quiero buscar, y le paso el nodo raiz
+if(canton->nombre.find(busc)!=-1){
+        cout<<canton->nombre<<endl;}
+        if(canton->izquierdo!=NULL){
+    locate(canton->izquierdo,busc);
+}
+    if(canton->derecho!=NULL){
+        locate(canton->derecho,busc);
+}
+
+} 
+
+
+
+};
+
+
+int main(){
+    Arbol a;
+    //int cont=0;
+    string accion, dir1,xxx,xxx2,dir;
+    char direccion[1000];
+    char direccion1[1000];
+    char *ptr;
+    Nodo * base = new Nodo();
+    Nodo * aux  = new Nodo();
+    Nodo * temp = new Nodo();
+    Nodo * temp1 = new Nodo();
+   
+    Nodo * auxM = new Nodo();
+    aux=a.raiz;
+    base=a.raiz;
+    cin>>accion;
+    cin.ignore();
+    if(accion!="pwd" && accion!="ls" && accion!="eshoja"  &&  accion!="duff" ){
+	
+    cin.get(direccion, 1000);}
+
+	if(accion=="duff"){
+		cin>>direccion;
+	}
+
+    while (accion!="exit"){
+		if(accion =="eshoja"){
+			cout<<"1 si es hoja, 0 si no lo es"<<endl;
+			cout<<a.eshoja(base)<<endl;
+		}
+		
+		if(accion=="buscar"){
+			cin.ignore();
+			cin>>direccion;
+			if(0!=a.recursion(a.raiz,direccion)){
+				cout<<"lo encontro"<<endl;
+				}else{
+					cout<<"no lo encontro"<<endl;
+					}
+		}
+		
+		if (accion=="cat"){
+			Nodo * ct=new Nodo();
+			ct=a.recursion(a.raiz,direccion);
+			cout<<ct->descripcion<<endl;
+			
+		}
+		
+		
+		if (accion=="mv"){
+			if(direccion[0]!='@'){
+			Nodo * cop=new Nodo();
+			  string copia;
+					   string destino;
+						ptr = strtok(direccion," ");
+					 copia=ptr;
+						
+      while(ptr != NULL)
+        {
+			destino=ptr;
+            ptr = strtok(NULL, " ");
+        }
+			cop=a.recursion(a.raiz,copia);
+			cop->nombre=destino;
+			
+			
+		}else{
+			cout<<"entro al mover"<<endl;
+			Nodo * cop =new Nodo();
+			Nodo  * des=new Nodo();
+			Nodo * aux=new Nodo(); 
+			 Nodo * temp= new Nodo();
+			 aux=a.raiz;
+			 char * c;
+		     char * d;
+		     string copia;
+		     string destino;
+						ptr = strtok(direccion," ");
+					 c=ptr;
+						
+      while(ptr != NULL)
+        {
+			d=ptr;
+            ptr = strtok(NULL, " ");
+        }
+		
+					ptr = strtok(c,"@");
+						
+      while(ptr != NULL)
+        {
+			copia=ptr;
+           
+            aux=a.recursion(aux,ptr);
+           
+            if(aux->derecho==0){
+                break;
+            }
+            temp=aux;
+            ptr = strtok(NULL, "@");
+        
+        }
+        
+        		ptr = strtok(d,"@");
+						
+      while(ptr != NULL)
+        {
+			destino=ptr;
+            ptr = strtok(NULL, "@");
+        }
+	
+		
+		cop=a.recursion(a.raiz,copia);
+		des=a.recursion(a.raiz,destino);
+		cout<<"El padre es: "<<temp->nombre<<endl;
+		
+		cout<<cop->nombre<<endl;
+		cout<<des->nombre<<endl;
+		if(des->derecho==NULL){
+			des->derecho=cop;
+		}
+		a.rm(cop->nombre,temp);
+		
+		
+		}
+			
+			
+		}
+		
+		if (accion=="cp"){
+			cout<<"entro al copiar"<<endl;
+			Nodo * cop =new Nodo();
+			Nodo  * des=new Nodo();
+			 char * c;
+		     char * d;
+		     string copia;
+		     string destino;
+						ptr = strtok(direccion," ");
+					 c=ptr;
+						
+      while(ptr != NULL)
+        {
+			d=ptr;
+            ptr = strtok(NULL, " ");
+        }
+		
+					ptr = strtok(c,"@");
+						
+      while(ptr != NULL)
+        {
+			copia=ptr;
+            ptr = strtok(NULL, "@");
+        }
+        
+        		ptr = strtok(d,"@");
+						
+      while(ptr != NULL)
+        {
+			destino=ptr;
+            ptr = strtok(NULL, "@");
+        }
+	
+		
+		cop=a.recursion(a.raiz,copia);
+		des=a.recursion(a.raiz,destino);
+		cout<<cop->nombre<<endl;
+		cout<<des->nombre<<endl;
+		
+		if(des->derecho==NULL){
+			des->derecho=cop;
+		}else{
+			Nodo * aux= new Nodo();
+			aux=des->derecho;
+			while(aux->izquierdo!=NULL){
+				aux=aux->izquierdo;
+			}
+			aux->izquierdo=cop;
+		}
+			
+		}
+		
+			
+			if (accion=="locate"){
+						a.locate(a.raiz, direccion);
+				
+			}
+		
+		if(accion=="ls"){
+			Nodo * auxx =new Nodo();
+			auxx=base;
+			auxx=auxx->derecho;
+			cout<<"entro en el ls"<<endl;
+			a.imprimir(auxx);	
+		}
+		
+		if(accion=="pwd"){
+			cout<<base->nombre<<endl;
+		}
+		
+		if(accion=="cd"){
+			ptr = strtok(direccion,"@");
+		     while(ptr != NULL){
+            base=a.recursion(aux,ptr);
+            ptr = strtok(NULL, "@");
+            cout<<base->nombre<<endl;
+        }
+        	
+		}
+		
+		
+		if(accion=="duff"){
+			cin>>dir;
+			cout<<dir<<endl;
+			Nodo *duf = new Nodo();
+		
+            duf=a.recursion(aux,dir);
+            
+            cout<<duf->nombre<<endl;
+				cin.get(direccion, 1000);
+					duf->descripcion=direccion;
+					cout<<duf->descripcion<<endl;
+		}
+		
+		if (accion=="touch"){
+			a.insertarNodo(direccion,base);
+		}
+		
+		
+		
+		
+		
+        if (accion=="mkdir"){
+			temp=base;
+//    DERECHO VAN LOS HIJOS, IZQUIERDO VAN LOS HERMANOS
+			if(direccion[0]!='@'){
+				if(temp->derecho==NULL){
+					 ptr = strtok(direccion,"@");
+					 a.HDi(temp, ptr);
+					//insertar como hijo directo
+				}else{
+					auxM=temp->derecho;
+					while(auxM->izquierdo!=NULL){
+						auxM=auxM->izquierdo;
+					}
+					ptr = strtok(direccion,"@");
+					a.UHe(auxM,ptr);
+					//buscar el ultimo de los hijos insertar como ultimo hermano hermano
+				}
+				}else{
+						Nodo * mk = new Nodo();
+						mk=a.raiz;
+					   ptr = strtok(direccion,"@");
+					   string x;
+      while(ptr != NULL)
+        {
+			x=ptr;
+            mk=a.recursion(mk,ptr);
+           
+            if(mk==0){
+                break;
+            }
+            temp=mk;
+            ptr = strtok(NULL, "@");
+        }
+        cout<<temp->nombre<<endl;
+		cout<<x<<endl;
+			a.insertarNodo(x,temp);
+        }
+    }
+    
+		/*if (accion=="rm"){
+		if (direccion[0]!='@'){
+		 ptr = strtok(direccion,"@");
+		 Nodo * mama = new Nodo();
+		 mama=a.recursion(a.raiz,ptr);
+		cout<<"lo encontro ahora lo eliminara"<<endl;
+		a.genkidama(mama->derecho);
+		}else{
+		      while(ptr != NULL){
+            aux2=a.recursion(aux,ptr);
+                  
+            ptr = strtok(NULL, "@");
+        }
+		a.genkidama(aux2);
+	
+		}	
+		
+		}*/
+		
+		
+			if (accion=="rm"){
+				cout<<direccion[0]<<endl;
+				if (direccion[0]!='-'){
+		if (direccion[0]!='@'){
+		 ptr = strtok(direccion,"@");
+		a.rm(ptr,a.raiz);
+		}else{
+			cout<<"entro por aqui"<<endl;
+			Nodo * rr= new Nodo();
+	
+					   ptr = strtok(direccion,"@");
+			rr=a.raiz;			
+			string x;			
+      while(ptr != NULL){
+			x=ptr;
+			 rr=a.recursion(rr,ptr);
+            if(rr->derecho==0){   
+                break;
+            }
+            temp1=rr;
+            ptr = strtok(NULL, "@");
+        }
+        cout<<temp1->nombre<<endl;
+		cout<<x<<endl;
+		a.rm(x,temp1);
+		
+		}	
+	}else{
+				cin.ignore();
+				cin.get(direccion1,1000);
+			Nodo * rr= new Nodo();
+					   ptr = strtok(direccion1,"@");
+			rr=a.raiz;			
+			string x;			
+      while(ptr != NULL){
+			x=ptr;
+			 rr=a.recursion(rr,ptr);
+            if(rr->derecho==0){   
+                break;
+            }
+            temp1=rr;
+            ptr = strtok(NULL, "@");
+        }
+        cout<<temp1->nombre<<endl;
+		cout<<x<<endl;
+		a.rm(x,temp1);	
+					
+				}
+
+	
+		}
+		
+			
+    
+    cin>>accion;
+	  cin.ignore();
+	  
+	  
+    
+	  
+    if(accion!="pwd" && accion!="ls" && accion!="eshoja"  && accion!="duff"){
+
+    cin.get(direccion,1000);}        
+    
+    
+    
+    }
+    
+   
+    cout<<"Los nodos son: "<<endl;
+    a.imprimir(aux);
+
+}
